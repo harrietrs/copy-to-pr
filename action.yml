@@ -1,0 +1,52 @@
+name: 'Pull Request another repository'
+description: 'Used for pull request a copy of a directory to another repository'
+inputs:
+  source_directory:
+    description: 'Source directory from origin'
+    required: true
+  destination_repo:
+    description: 'Destination repository'
+    required: true
+  destination_directory:
+    description: 'Destination directory to push the origin directory'
+    required: false
+  user_email:
+    description: 'Email for the git commit'
+    required: true
+  user_name:
+    description: 'GitHub username for the commit'
+    required: true
+  destination_head_branch_prefix:
+    description: 'The branch to create to push the changes. Cannot be master or main'
+    required: true
+  destination_base_branch:
+    description: 'The branch into which you want your code merged.'
+    required: false
+    default: "main"
+  pull_request_reviewers:
+    description: 'Pull request reviewers users'
+    required: false
+  files_to_remove_path:
+    description: 'Relative file path including list of files to not include in PR'
+    required: false
+  commit_message:
+    description: 'Message to use for the commit to include in the pull request'
+    required: false
+    default: "Publishing to destination repo"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source-directory }}
+    - ${{ inputs.destination-repo }}
+    - ${{ inputs.destination-directory }}
+    - ${{ inputs.user-email }}
+    - ${{ inputs.user-name }}
+    - ${{ inputs.destination-head-branch-prefix }}
+    - ${{ inputs.destination-base-branch }}
+    - ${{ inputs.pull-request-reviewers }}
+    - ${{ inputs.files-to-remove-path }}
+    - ${{ inputs.commit-message }}
+branding:
+  icon: 'git-commit'
+  color: 'green'
