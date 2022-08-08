@@ -55,9 +55,6 @@ The prefix for the branch to create to push the changes. The branch name is made
 #### `destination_base_branch` 
 The branch into which you want your code merged.
 
-#### `pull-request-reviewers` 
-Pull request reviewers user names.
-
 #### `files-to-remove-path` 
 Relative file path including list of files to not include in PR. Optional and defaults to include all files.
 

@@ -23,9 +23,6 @@ inputs:
     description: 'The branch into which you want your code merged.'
     required: false
     default: "main"
-  pull_request_reviewers:
-    description: 'Pull request reviewers users'
-    required: false
   files_to_remove_path:
     description: 'Relative file path including list of files to not include in PR'
     required: false
@@ -44,7 +41,6 @@ runs:
     - ${{ inputs.user-name }}
     - ${{ inputs.destination-head-branch-prefix }}
     - ${{ inputs.destination-base-branch }}
-    - ${{ inputs.pull-request-reviewers }}
     - ${{ inputs.files-to-remove-path }}
     - ${{ inputs.commit-message }}
 branding:
