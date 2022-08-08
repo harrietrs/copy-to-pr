@@ -27,8 +27,10 @@ cp -a $INPUT_SOURCE_DIRECTORY "$CLONE_DIR/"
 cd "$CLONE_DIR"
 git config --global --add safe.directory "$CLONE_DIR"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
+
 echo "Adding git commit"
 git add .
+
 if [ -z "$INPUT_FILES_TO_REMOVE_PATH" ]
 then
   echo "Including all files in PR"
@@ -38,9 +40,11 @@ fi
 
 if git status | grep -q "Changes to be committed"
 then
-  git commit --message $INPUT_COMMIT_MESSAGE
+  git commit --message "$INPUT_COMMIT_MESSAGE"
+  
   echo "Pushing git commit"
   git push -u origin HEAD:$DESTINATION_HEAD_BRANCH
+
   echo "Creating a pull request"
   gh pr create -t $DESTINATION_HEAD_BRANCH \
              -b $DESTINATION_HEAD_BRANCH \
