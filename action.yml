@@ -1,5 +1,5 @@
-name: 'Pull Request another repository'
-description: 'Used for pull request a copy of a directory to another repository'
+name: 'Pull request copy to another repo'
+description: 'Copies files (directories or entire branch) to a new branch of another repo and raises a PR'
 inputs:
   source_directory:
     description: 'Source directory from origin'

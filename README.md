@@ -1,4 +1,4 @@
-# Action pull request another repository
+# Action pull request copy to another repo
 This GitHub Action copies files from the current repository to a branch in another repository and creates a pull request.
 
 This was developed primarily to assist developers restricted to approval before publishing private repository branches.
