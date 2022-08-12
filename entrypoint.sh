@@ -46,7 +46,7 @@ then
   git push -u origin HEAD:$DESTINATION_HEAD_BRANCH
 
   echo "Creating a pull request"
-  gh-cli pr create -t $DESTINATION_HEAD_BRANCH \
+  gh pr create -t $DESTINATION_HEAD_BRANCH \
              -b $DESTINATION_HEAD_BRANCH \
              -B $INPUT_DESTINATION_BASE_BRANCH \
              -H $DESTINATION_HEAD_BRANCH \
