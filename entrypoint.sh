@@ -21,6 +21,7 @@ else
 fi
 
 CLONE_DIR=$(mktemp -d)
+git config --global --add safe.directory "$CLONE_DIR"
 
 echo "Setting git variables"
 export GITHUB_TOKEN=$API_TOKEN_GITHUB
