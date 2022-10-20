@@ -16,8 +16,8 @@ inputs:
   user_name:
     description: 'GitHub username for the commit'
     required: true
-  destination_head_branch:
-    description: 'The branch to create to push the changes. Cannot be master or main'
+  destination_head_branch_prefix:
+    description: 'The prefix to use for the branch to create to push the changes'
     required: true
   destination_base_branch:
     description: 'The branch into which you want your code merged.'
