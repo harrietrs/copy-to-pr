@@ -21,7 +21,6 @@ else
 fi
 
 CLONE_DIR=$(mktemp -d)
-git config --global --add safe.directory "$CLONE_DIR"
 
 echo "Setting git variables"
 export GITHUB_TOKEN=$API_TOKEN_GITHUB
@@ -33,7 +32,7 @@ git clone "https://$API_TOKEN_GITHUB@github.com/$INPUT_DESTINATION_REPO.git" "$C
 
 echo "Copying contents to git repo"
 mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
-cp -a . "$CLONE_DIR/$INPUT_DESTINATION_FOLDER/"
+cp -r $INPUT_SOURCE_FOLDER "$CLONE_DIR/$INPUT_DESTINATION_FOLDER/"
 cd "$CLONE_DIR"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
 
