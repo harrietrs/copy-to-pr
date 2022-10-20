@@ -43,7 +43,7 @@ if [ -z "$INPUT_FILES_TO_REMOVE_PATH" ]
 then
   echo "Including all files in PR"
 else
-  cat $INPUT_FILES_TO_REMOVE_PATH | xargs git rm -rf --cached
+  cat $INPUT_FILES_TO_REMOVE_PATH | xargs git rm -rf 
 fi
 
 if git status | grep -q "Changes to be committed"
