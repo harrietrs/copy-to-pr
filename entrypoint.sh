@@ -38,6 +38,14 @@ git checkout -b "$DESTINATION_HEAD_BRANCH"
 
 echo "Adding git commit"
 git add .
+
+if [ -z "$INPUT_FILES_TO_REMOVE_PATH" ]
+then
+  echo "Including all files in PR"
+else
+  cat $INPUT_FILES_TO_REMOVE_PATH | xargs git rm -rf --cached
+fi
+
 if git status | grep -q "Changes to be committed"
 then
   git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"

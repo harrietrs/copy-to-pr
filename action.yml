@@ -26,6 +26,9 @@ inputs:
   pull_request_reviewers:
     description: 'Pull request reviewers users'
     required: false
+  files_to_remove_path:
+    description: 'Relative file path including list of files to not include in PR'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -35,9 +38,10 @@ runs:
     - ${{ inputs.destination-folder }}
     - ${{ inputs.user-email }}
     - ${{ inputs.user-name }}
-    - ${{ inputs.destination-head-branch }}
+    - ${{ inputs.destination-head-branch-prefix }}
     - ${{ inputs.destination-base-branch }}
     - ${{ inputs.pull-request-reviewers }}
+    - ${{ inputs.files-to-remove-path }}
 branding:
   icon: 'git-commit'
   color: 'green'
