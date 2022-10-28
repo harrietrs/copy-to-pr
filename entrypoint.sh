@@ -33,7 +33,6 @@ EMAIL="${INPUT_USER_EMAIL:-${GITHUB_ACTOR}@users.noreply.github.com}"
 DESTINATION_BASE_BRANCH="${DST_BRANCH:-main}"
 
 SOURCE_REPO="${GITHUB_REPOSITORY}"
-SRC_REPO_NAME="${GITHUB_REPOSITORY#*}"
 
 echo $SRC_REPO_NAME
 
@@ -46,13 +45,40 @@ echo "Setting git variables"
 git config --global user.email "$EMAIL"
 git config --global user.name "$USERNAME"
 
-echo "Cloning destination git repository"
-git clone "https://$GH_TOKEN@github.com/$DESTINATION_REPO.git" "$CLONE_DIR"
+echo "Cloning source git repository"
+git clone --branch main --single-branch --depth 1 https://${GH_TOKEN}@github.com/${SOURCE_REPO}.git
+
+if [ "$?" -ne 0 ]; then
+    echo >&2 "Cloning '$SRC_REPO' failed"
+    exit 1
+fi
+rm -rf ${SRC_REPO_NAME}/.git
+
+echo "Cloning destination repository"
+
+git clone --branch $INPUT_DESTINATION_BASE_BRANCH --single-branch --depth 1 "https://$GH_TOKEN@github.com/$DESTINATION_REPO.git" ${CLONE_DIR}
+if [ "$?" -ne 0 ]; then
+    echo >&2 "Cloning branch '$INPUT_DESTINATION_BASE_BRANCH' in '$DESTINATION_REPO' failed"
+    echo >&2 "Falling back to default branch"
+    git clone --single-branch --depth 1 https://${GH_TOKEN}@github.com/${DESTINATION_REPO}.git ${CLONE_DIR}
+    cd ${CLONE_DIR} || exit "$?"
+    echo >&2 "Creating branch '$INPUT_DESTINATION_BASE_BRANCH'"
+    git checkout -b $INPUT_DESTINATION_BASE_BRANCH
+    if [ "$?" -ne 0 ]; then
+        echo >&2 "Creation of Branch '$INPUT_DESTINATION_BASE_BRANCH' failed"
+        exit 1
+    fi
+    cd ..
+fi
 
 echo "Copying contents to git repo"
-mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
-cp -r $INPUT_SOURCE_FOLDER "$CLONE_DIR/$INPUT_DESTINATION_FOLDER/"
-cd "$CLONE_DIR"
+mkdir -p "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER%/*}" || exit "$?"
+cp -rf "${INPUT_SOURCE_FOLDER}" "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER}" || exit "$?"
+cd "${CLONE_DIR}" || exit "$?"
+
+# mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
+# cp -r $INPUT_SOURCE_FOLDER "$CLONE_DIR/$INPUT_DESTINATION_FOLDER/"
+# cd "$CLONE_DIR"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
 
 echo "Adding git commit"
@@ -77,4 +103,8 @@ then
                -H $DESTINATION_HEAD_BRANCH 
 else
   echo "No changes detected"
+fi
+
+if [[ -n "$EXCLUDE" && -z "$FILTER" ]]; then
+    FILTER="**"
 fi
