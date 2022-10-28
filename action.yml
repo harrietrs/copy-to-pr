@@ -1,5 +1,5 @@
-name: 'Pull request copy to another repo'
-description: 'Copies files (directories or entire branch) to a new branch of another repo and raises a PR'
+name: 'Copy-PR Action'
+description: 'GitHub Action for copying files to another repository and raising a PR'
 inputs:
   destination_repo:
     description: 'The name of the destination repository.'
