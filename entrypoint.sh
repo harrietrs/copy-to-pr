@@ -54,7 +54,7 @@ if [ "$?" -ne 0 ]; then
     echo >&2 "Cloning '$SRC_REPO' failed"
     exit 1
 fi
-rm -rf ${SRC_REPO_NAME}/.git
+rm -rf ${SOURCE_REPO_NAME}/.git
 
 echo "Cloning destination repository"
 
@@ -78,9 +78,6 @@ mkdir -p "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER%/*}" || exit "$?"
 cp -rf "${FINAL_SOURCE}" "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER}" || exit "$?"
 cd "${CLONE_DIR}" || exit "$?"
 
-# mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
-# cp -r $INPUT_SOURCE_FOLDER "$CLONE_DIR/$INPUT_DESTINATION_FOLDER/"
-# cd "$CLONE_DIR"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
 
 echo "Adding git commit"
