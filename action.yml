@@ -1,44 +1,46 @@
 name: 'Pull request copy to another repo'
 description: 'Copies files (directories or entire branch) to a new branch of another repo and raises a PR'
 inputs:
-  source_folder:
-    description: 'Source folder from origin'
-    required: true
   destination_repo:
-    description: 'Destination repository'
+    description: 'The name of the destination repository.'
     required: true
   destination_owner:
     description: 'Destination owner'
     required: true
-  destination_folder:
-    description: 'Destination folder to push the origin folder'
+  source_directory:
+    description: 'The location of the files in the source repository that you want to include in the pull request. Defaults to "/.".'
     required: false
-  user_email:
-    description: 'Email for the git commit'
-    required: false
-  user_name:
-    description: 'GitHub username for the commit'
+    default: "/."
+  destination_directory:
+    description: 'Directory where the source directory is copied to. Defaults to {source_directory}.'
     required: false
   destination_base_branch:
     description: 'The branch into which you want your code merged.'
     required: false
     default: "main"
+  user_email:
+    description: 'Email for the git commit. Defaults to {user_name}@users.noreply.github.com'
+    required: false
+  user_name:
+    description: 'GitHub username for the commit. Defaults to user triggering the action.'
+    required: false
   files_to_remove_path:
-    description: 'Relative file path including list of files to not include in PR'
+    description: 'Relative file path including list of files to not include in PR.'
     required: false
     default: ".github/workflows/ci_ignore.txt"
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.source-folder }}
-    - ${{ inputs.destination-repo }}
-    - ${{ inputs.destination-owner }}
-    - ${{ inputs.destination-folder }}
-    - ${{ inputs.user-email }}
-    - ${{ inputs.user-name }}
-    - ${{ inputs.destination-base-branch }}
-    - ${{ inputs.files-to-remove-path }}
+    - ${{ inputs.destination_repo }}
+    - ${{ inputs.destination_owner }}
+    - ${{ inputs.source_directory }}
+    - ${{ inputs.destination_directory }}
+    - ${{ inputs.destination_base_branch }}
+    - ${{ inputs.user_email }}
+    - ${{ inputs.user_name }}
+    - ${{ inputs.files_to_remove_path }}
+
 branding:
   icon: 'git-commit'
   color: 'green'
