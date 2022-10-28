@@ -33,6 +33,7 @@ EMAIL="${INPUT_USER_EMAIL:-${GITHUB_ACTOR}@users.noreply.github.com}"
 DESTINATION_BASE_BRANCH="${DST_BRANCH:-main}"
 
 SOURCE_REPO="${GITHUB_REPOSITORY}"
+FINAL_SOURCE="${SOURCE_REPO}/${INPUT_SOURCE_FOLDER}"
 
 echo $SRC_REPO_NAME
 
@@ -73,7 +74,7 @@ fi
 
 echo "Copying contents to git repo"
 mkdir -p "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER%/*}" || exit "$?"
-cp -rf "${INPUT_SOURCE_FOLDER}" "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER}" || exit "$?"
+cp -rf "${FINAL_SOURCE}" "${CLONE_DIR}/${INPUT_DESTINATION_FOLDER}" || exit "$?"
 cd "${CLONE_DIR}" || exit "$?"
 
 # mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
