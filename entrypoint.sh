@@ -2,6 +2,7 @@
 
 set -e
 set -x
+set -o pipefail
 
 TIME_ID=$(date +%s)
 
@@ -11,24 +12,42 @@ then
   return -1
 fi
 
-DESTINATION_HEAD_BRANCH=$INPUT_DESTINATION_HEAD_BRANCH_PREFIX$TIME_ID
-
-if [ -z "$INPUT_PULL_REQUEST_REVIEWERS" ]
-then
-  PULL_REQUEST_REVIEWERS=$INPUT_PULL_REQUEST_REVIEWERS
-else
-  PULL_REQUEST_REVIEWERS='-r '$INPUT_PULL_REQUEST_REVIEWERS
+if [ -z "$INPUT_DESTINATION_REPO" ]; then
+    echo "Destination repo must be defined"
+    exit 1
 fi
+
+if [ -z "$INPUT_DESTINATION_OWNER" ]; then
+    echo "Destination owner must be defined"
+    exit 1
+fi
+
+DESTINATION_REPO="${INPUT_DESTINATION_OWNER}/${INPUT_DESTINATION_REPO}"
+DESTINATION_HEAD_BRANCH="publish_${TIME_ID}"
+DESTINATION_FOLDER="${INPUT_DESTINATION_FOLDER:-${INPUT_SOURCE_FOLDER}}"
+
+BASE_PATH=$(pwd)
+USERNAME="${INPUT_USER_NAME:-${GITHUB_ACTOR}}"
+EMAIL="${INPUT_USER_EMAIL:-${GITHUB_ACTOR}@users.noreply.github.com}"
+
+DESTINATION_BASE_BRANCH="${DST_BRANCH:-main}"
+
+SOURCE_REPO="${GITHUB_REPOSITORY}"
+SRC_REPO_NAME="${GITHUB_REPOSITORY#*}"
+
+echo $SRC_REPO_NAME
+
+git config --global user.name "${USERNAME}"
+git config --global user.email "${EMAIL}"
 
 CLONE_DIR=$(mktemp -d)
 
 echo "Setting git variables"
-export GITHUB_TOKEN=$API_TOKEN_GITHUB
-git config --global user.email "$INPUT_USER_EMAIL"
-git config --global user.name "$INPUT_USER_NAME"
+git config --global user.email "$EMAIL"
+git config --global user.name "$USERNAME"
 
 echo "Cloning destination git repository"
-git clone "https://$API_TOKEN_GITHUB@github.com/$INPUT_DESTINATION_REPO.git" "$CLONE_DIR"
+git clone "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPO.git" "$CLONE_DIR"
 
 echo "Copying contents to git repo"
 mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
@@ -55,8 +74,7 @@ then
   gh pr create -t $DESTINATION_HEAD_BRANCH \
                -b $DESTINATION_HEAD_BRANCH \
                -B $INPUT_DESTINATION_BASE_BRANCH \
-               -H $DESTINATION_HEAD_BRANCH \
-                  $PULL_REQUEST_REVIEWERS
+               -H $DESTINATION_HEAD_BRANCH 
 else
   echo "No changes detected"
 fi

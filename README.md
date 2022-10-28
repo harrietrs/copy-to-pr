@@ -5,7 +5,7 @@ This was developed primarily to assist developers restricted to approval before 
 
 It heavily borrows from [github-action-push-to-another-repository](https://github.com/cpina/github-action-push-to-another-repository) and [action-pull-request-another-repo](https://github.com/paygoc6/action-pull-request-another-repo) but allows the user to copy over the entire contents of one repo, without copying over GitHub workflow files.
 
-## Workflow 
+## Workflow
 
 The user has two repositories in mind:
 
@@ -38,7 +38,10 @@ The location of the files in the source repository that you want to include in t
 The username you want to attach to the pull request.
 
 #### `destination-repository-name` 
-The name of the destination repository, including the owner name e.g. owner-name/repository-name. 
+The name of the destination repository.
+
+#### `destination-owner`
+The owner name e.g. owner-name/repository-name, of the destination repository.
 
 #### `destination_directory` 
 Destination directory to push the origin directory.
@@ -49,9 +52,6 @@ The email used for the commit & pull request.
 #### `user-name` 
 The name that will be used for the commit and pull request.
 
-#### `destination_head_branch_prefix` 
-The prefix for the branch to create to push the changes. The branch name is made from this prefix and a time stamp.
-
 #### `destination_base_branch` 
 The branch into which you want your code merged.
 
@@ -60,8 +60,6 @@ Relative file path including list of files to not include in PR. Optional and de
 
 #### `commit-message` 
 The commit message to be used in the output repository. Optional and defaults to "Publishing to destination repo".
-
-
 
 ## Example Workflow
 ```yml
@@ -87,9 +85,9 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
             source_directory: ./ 
-            destination_repo: 'user-name/repository-name'
-            destination_base_branch: private-branch-name
-            destination_head_branch: publish-branch-name
+            destination_repo: 'repository-name'
+            destination_owner: 'user-name'
+            destination_base_branch: final-branch-name
             user_email: user-name@email.com
             user_name: user-name
             files_to_remove_path: filesToRemove.txt
