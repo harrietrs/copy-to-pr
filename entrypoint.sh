@@ -29,6 +29,7 @@ DESTINATION_FOLDER="${INPUT_DESTINATION_FOLDER:-${INPUT_SOURCE_FOLDER}}"
 BASE_PATH=$(pwd)
 USERNAME="${INPUT_USER_NAME:-${GITHUB_ACTOR}}"
 EMAIL="${INPUT_USER_EMAIL:-${GITHUB_ACTOR}@users.noreply.github.com}"
+FILES_TO_REMOVE_PATH="${INPUT_FILES_TO_REMOVE_PATH:-.github/workflows/ci_ignore.txt}"
 
 DESTINATION_BASE_BRANCH="${DST_BRANCH:-main}"
 
@@ -83,25 +84,25 @@ git checkout -b "$DESTINATION_HEAD_BRANCH"
 echo "Adding git commit"
 git add --all .
 
-if [ -z "$INPUT_FILES_TO_REMOVE_PATH" ]
-then
-  echo "Including all files in PR"
-else
-  cat $INPUT_FILES_TO_REMOVE_PATH | xargs git rm -rf --cached
+if [ -f "$FILES_TO_REMOVE_PATH" ]; then
+    if [ -s "$FILES_TO_REMOVE_PATH" ]; then
+        cat $INPUT_FILES_TO_REMOVE_PATH | xargs git rm -rf --cached
+    fi
+else 
+    echo "Including all files in PR"
 fi
 
-if git status | grep -q "Changes to be committed"
-then
-  git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
-  echo "Pushing git commit"
-  git push -u origin HEAD:$DESTINATION_HEAD_BRANCH
-  echo "Creating a pull request"
-  gh pr create -t $DESTINATION_HEAD_BRANCH \
-               -b $DESTINATION_HEAD_BRANCH \
-               -B $INPUT_DESTINATION_BASE_BRANCH \
-               -H $DESTINATION_HEAD_BRANCH 
+if git status | grep -q "Changes to be committed"; then
+    git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+    echo "Pushing git commit"
+    git push -u origin HEAD:$DESTINATION_HEAD_BRANCH
+    echo "Creating a pull request"
+    gh pr create -t $DESTINATION_HEAD_BRANCH \
+                -b $DESTINATION_HEAD_BRANCH \
+                -B $INPUT_DESTINATION_BASE_BRANCH \
+                -H $DESTINATION_HEAD_BRANCH 
 else
-  echo "No changes detected"
+    echo "No changes detected"
 fi
 
 if [[ -n "$EXCLUDE" && -z "$FILTER" ]]; then

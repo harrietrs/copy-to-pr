@@ -26,6 +26,7 @@ inputs:
   files_to_remove_path:
     description: 'Relative file path including list of files to not include in PR'
     required: false
+    default: ".github/workflows/ci_ignore.txt"
 runs:
   using: 'docker'
   image: 'Dockerfile'
