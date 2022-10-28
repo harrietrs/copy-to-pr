@@ -82,7 +82,7 @@ jobs:
       - name: Repo PR step
         uses: ./ 
         env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+          GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         with:
             source_directory: ./ 
             destination_repo: 'repository-name'

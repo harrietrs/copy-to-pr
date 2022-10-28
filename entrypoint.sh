@@ -47,7 +47,7 @@ git config --global user.email "$EMAIL"
 git config --global user.name "$USERNAME"
 
 echo "Cloning destination git repository"
-git clone "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPO.git" "$CLONE_DIR"
+git clone "https://$GH_TOKEN@github.com/$DESTINATION_REPO.git" "$CLONE_DIR"
 
 echo "Copying contents to git repo"
 mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER/
