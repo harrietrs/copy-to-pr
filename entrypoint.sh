@@ -82,7 +82,7 @@ cd "${CLONE_DIR}" || exit "$?"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
 
 echo "Adding git commit"
-git add .
+git add -a .
 
 if [ -z "$INPUT_FILES_TO_REMOVE_PATH" ]
 then
