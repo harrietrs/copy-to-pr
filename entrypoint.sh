@@ -105,7 +105,3 @@ if git status | grep -q "Changes to be committed"; then
 else
     echo "No changes detected"
 fi
-
-if [[ -n "$EXCLUDE" && -z "$FILTER" ]]; then
-    FILTER="**"
-fi
